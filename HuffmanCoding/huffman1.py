@@ -70,14 +70,15 @@ class Huffman:
                 return i.indx
         return -1
 
-    def hasparent(self,ind):
-        #print("checking ind for parent", ind)
+    def hasparent(self, ind):
+        # print("checking ind for parent", ind)
         for i in self.tree:
-            #print(i.rchild,i.lchild)
+            # print(i.rchild,i.lchild)
             if int(i.rchild) == ind or int(i.lchild) == ind:
-                #print('yes')
+                # print('yes')
                 return True
         return False
+
     def getmin(self):
         minval = 1000.0  # fix this
         minloc = 1000
@@ -94,6 +95,7 @@ class Huffman:
         if minloc == 1000:
             minloc = -1
         return minval, minloc
+
     def printtree(self):
         print('printtree')
         for i in self.tree:

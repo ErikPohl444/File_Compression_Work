@@ -14,7 +14,8 @@ LESSVARIABLERANDOM = "LESSVARIABLERANDOM"
 ##
 # ###  dedup
 # accepts a file path as input and does the following to the file to write to a file path passed as output:
-# assigns a hash value to each block and creates an in memory table of hash values which should be substantially less than the file length
+# assigns a hash value to each block and creates an in memory table of hash values
+# which should be substantially less than the file length
 # write the hash table to the output file
 # for each block in the input file, write out its hash to the output file
 ##
@@ -31,16 +32,20 @@ class Dedupredup:
         self.SUMPOWERSOF7 = 'SUMPOWERSOF7'      # hash method just sum of powers of 7
         self.FIRSTNBYTES = 'FIRSTNBYTES'        # hash method first n bytes of block
         self.SHUFFLE = 'SHUFFLE'                # hash method just sum of various methods determined by 3 bits
-        self.hashfunc = hashfunc                # this is the hash function which will be used in dedup [assigned by parameter]
-        self.hashtable = {}                      # this table stores hashes and value
+        self.hashfunc = hashfunc                # this is the hash function which will be used in dedup [assigned
+        # by parameter]
+        self.hashtable = {}                     # this table stores hashes and value
         self.orderedhashes = []                 # stores ordered hashes for purposes of writing file
         self.chunksize = cz                     # parameter assigned size of chunk [1024 bytes for this use case]
-        self.hashsize = hz                      # parameter assigned size of hash code [8 bytes per chunk for this use case]
-        self.attempts = 0                        # statistics on how many hash attempts were made
-        self.matches = 0                        # statisics on how many hashes and values matched [or hit] and existing value
+        self.hashsize = hz                      # parameter assigned size of hash code
+        # [8 bytes per chunk for this use case]
+        self.attempts = 0                       # statistics on how many hash attempts were made
+        self.matches = 0                        # statisics on how many hashes and values matched
+        # [or hit] and existing value
         self.collisions = 0                     # collisions on how many hashes overlapped for different values
         self.debughash = debugflag              # DEPRECATED : debug flag, TODO add debugs in in a meaningful way
-        self.testtype = testyp                  # this is the name of the type of file which will be generated to test the process
+        self.testtype = testyp                  # this is the name of the type of file which will
+        # be generated to test the process
         self.originalfilepath = origfilepath    # original or source binary file location and name
         self.dedupedfilepath = dedupfilepath    # deduped binary file location and name
         self.redupedfilepath = redupfilepath    # reduped binary file location and name
@@ -289,7 +294,9 @@ class Dedupredup:
         # output if any error is expected due to collisions
         if self.collisions > 0:
             return "Result: Redupped {0} with {0} collisions.\n".format(outputf, self.collisions)
-        return "Result: Completed redupping without collisions or error: redupped {0} into {1}.\n".format(inputf, outputf)
+        return "Result: Completed redupping without collisions or error: redupped {0} into {1}.\n".format(
+            inputf, outputf
+        )
 
 
 # execute tests
@@ -302,7 +309,16 @@ if __name__ == '__main__':
     # original file path and file name is "myoriginalfile.bin"
     # deduped file path and file name is "mydedupedfile.bin"
     # reduped file path and file name is "myredupedfile.bin"
-    dduprdup = Dedupredup(1024, 8, True, SHUFFLE, LESSVARIABLERANDOM, "myoriginalfile.bin", "mydedupedfile.bin", "myredupedfile.bin")
+    dduprdup = Dedupredup(
+        1024,
+        8,
+        True,
+        SHUFFLE,
+        LESSVARIABLERANDOM,
+        "myoriginalfile.bin",
+        "mydedupedfile.bin",
+        "myredupedfile.bin"
+    )
 
     # choose based on the test file type algorithm, create a test file in the original file path
     if dduprdup.testtype == BORINGTEST:
@@ -323,15 +339,18 @@ if __name__ == '__main__':
     print("File size of original [{0}]: {1}".format(dduprdup.originalfilepath, dduprdup.originalfizesize))
     print("File size of dedupped [{0}]: {1}".format(dduprdup.dedupedfilepath, dduprdup.dedupedfilesize))
     print("File size of redupped [{0}]: {1}".format(dduprdup.redupedfilepath, dduprdup.redupedfilesize))
-    if filecmp.cmp(dduprdup.redupedfilepath, dduprdup.originalfilepath) and (dduprdup.dedupedfilesize < dduprdup.originalfizesize):
-        print("File deduplication SUCCESS: Original file matches Deduped Reduped Original file and original file deduped by {0} percent.".format(
-            100 * (dduprdup.originalfizesize - dduprdup.dedupedfilesize)/dduprdup.originalfizesize)
+    if (filecmp.cmp(dduprdup.redupedfilepath, dduprdup.originalfilepath)
+            and (dduprdup.dedupedfilesize < dduprdup.originalfizesize)):
+        print(
+            "File deduplication SUCCESS: Original file matches "
+            "Deduped Reduped Original file and original file deduped by {0} percent.".format(
+                100 * (dduprdup.originalfizesize - dduprdup.dedupedfilesize)/dduprdup.originalfizesize)
         )
     else:
         print("File deduplication FAILURE")
         if not filecmp.cmp(dduprdup.redupedfilepath, dduprdup.originalfilepath):
             print("Original file does not match Deduped Reduped Original file.")
-        if (dduprdup.dedupedfilesize > dduprdup.originalfizesize):
+        if dduprdup.dedupedfilesize > dduprdup.originalfizesize:
             print(
                 "Deduped file increased size by {0} percent.".format(
                     100 *
